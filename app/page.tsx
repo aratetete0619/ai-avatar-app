@@ -58,11 +58,14 @@ export default function Home() {
 
     if (result.success && result.imageUrl) {
       toast.success("画像生成が完了しました！");
-      setPrompt(''); // 入力欄をクリア
+      setPrompt('');
       
-      // 2. 新しい画像をギャラリーの先頭に手動で追加（リロード不要にするため）
+      // ★ 追加: ヘッダーに「クレジット減らして表示して！」と伝える
+      window.dispatchEvent(new Event('credit_updated'));
+
+      // ギャラリーへの追加処理
       const newImage: Generation = {
-        id: Math.random().toString(), // 一時的なID
+        id: Math.random().toString(),
         image_url: result.imageUrl,
         prompt: prompt,
         created_at: new Date().toISOString(),
@@ -70,6 +73,7 @@ export default function Home() {
       setImages([newImage, ...images]);
 
     } else {
+      // エラーメッセージを表示（「不適切なコンテンツ〜」もここで表示される）
       toast.error(result.error || "エラーが発生しました");
     }
   };
